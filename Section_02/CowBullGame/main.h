@@ -1,7 +1,8 @@
-#pragma once
-using namespace std;
+#include "FBullCowGame.h"
 
 void printIntro();
 void playGame();
-string getGuess();
-void printGuess(string);
+std::string getGuess();
+void printGuess(std::string);
+bool playAgain();
+FBullCowGame BCGame;
