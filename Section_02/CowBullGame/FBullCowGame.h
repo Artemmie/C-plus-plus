@@ -26,7 +26,6 @@ public:
 	int32 getHiddenWordLength() const;
 	bool isGameWon() const;
 	EWordStatus checkGuessValidity(FString) const;
-
 	FBullCowCount Submitguess(FString);
 	void reset();
 
@@ -34,4 +33,7 @@ private:
 	int32 myCurrentTry;
 	int32 myMaxTries;
 	FString myHiddenWord;
+	bool gameWon;
+	bool isIsogram(FString) const;
+	bool isLowerCase(FString) const;
 };

@@ -21,38 +21,38 @@ void printIntro() {
 }
 
 void playGame() {
-	for (int32 i = BCgame.getCurrentTry(); i <= BCgame.getMaxTries(); i++) {
+	while (!BCgame.isGameWon() && BCgame.getCurrentTry() <= BCgame.getMaxTries()) {
 		FText guess = getGuess();
 		FBullCowCount bullCowCount = BCgame.Submitguess(guess);
 		std::cout << "Bulls = " << bullCowCount.Bulls << ". ";
 		std::cout << "Cows = " << bullCowCount.Cows;
 		std::cout << std::endl << std::endl;
 	}
+	printGameSummary();
 }
 
 FText getGuess() {
+	FText guess = "";
 	EWordStatus status = EWordStatus::Invalid_Status;
 	do {
-		std::cout << "Try " << BCgame.getCurrentTry() << ". Enter your Guess: ";
-		FText guess = "";
+		std::cout << "Try " << BCgame.getCurrentTry() << " out of " << BCgame.getMaxTries() <<  ". Enter your Guess: ";
 		std::getline(std::cin, guess);
 		status = BCgame.checkGuessValidity(guess);
 		switch (status) {
 		case EWordStatus::Wrong_Lenghth:
-			std::cout << "Please enter a " << BCgame.getHiddenWordLength() << " letter word." << std::endl;
+			std::cout << "Please enter a " << BCgame.getHiddenWordLength() << " letter word." << std::endl << std::endl;
 			break;
 		case EWordStatus::Not_Isogram:
-			std::cout << "Please enter a word without repeating letters." << std::endl;
+			std::cout << "Please enter a word without repeating letters." << std::endl << std::endl;
 			break;
 		case EWordStatus::Not_Lowercase:
-			std::cout << "Please enter in lowercase letters only." << std::endl;
+			std::cout << "Please enter in lowercase letters only." << std::endl << std::endl;
 			break;
 		default:
-			return guess;
+			break;
 		}
-		std::cout << std::endl;
 	} while (status != EWordStatus::OK);
-	return "";
+	return guess;
 }
 
 void printGuess(FText guess) {
@@ -68,4 +68,12 @@ bool playAgain() {
 		return true;
 	}
 	return false;
-} 
+}
+
+void printGameSummary() {
+	if (BCgame.isGameWon()) {
+		std::cout << "Congratulations, you won!";
+	}
+	else std::cout << "Better luck next time!";
+	std::cout << std::endl << std::endl;
+}
