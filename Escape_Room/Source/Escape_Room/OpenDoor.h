@@ -23,7 +23,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	void OpenDoor();
-	void CloseDoor();
 
 public:	
 	// Called every frame
@@ -37,6 +36,5 @@ private:
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* pressurePlate;
 	
-	UPROPERTY(EditAnywhere)
 	AActor* actorOpens;
 };
