@@ -291,7 +291,8 @@ __pycache__/
 */Intermediate/
 */Binaries/
 */Saved/
-*/Content/StarterContent/
+*/Content/StarterContent/Textures
+*/Content/StarterContent/HDRI
 *.suo
 
 
