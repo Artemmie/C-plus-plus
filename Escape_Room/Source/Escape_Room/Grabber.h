@@ -27,12 +27,12 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	float reach = 130.0f;
+	float reach = 150.0f;
 	UPhysicsHandleComponent* physicsHandle = nullptr;
 	UInputComponent* inputComponent = nullptr;
 	void PhysicsHandleComponent();
 	void InputComponent();
-	void Reach() const;
+	FHitResult reachTarget() const;
 	void Grab();
 	void Release();
 };
