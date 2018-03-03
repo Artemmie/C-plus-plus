@@ -12,8 +12,6 @@ UGrabber::UGrabber()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -21,13 +19,54 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
+	PhysicsHandleComponent();
+	InputComponent();
+}
 
-	FString objectName = GetOwner()->GetName();
-	FString objectPos = GetOwner()->GetTransform().GetLocation().ToString();
-	UE_LOG(LogTemp, Warning, TEXT("Position report on %s at %s"), *objectName, *objectPos);
+void UGrabber::PhysicsHandleComponent()
+{
+	physicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (physicsHandle)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("physicsComponent working just fine on %s"), *GetOwner()->GetName());
+	}
+}
+void UGrabber::InputComponent()
+{
+	inputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (inputComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("inputComponent working just fine on %s"), *GetOwner()->GetName());
+		inputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		inputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
+	}
+}
 
-	// ...
-	
+void UGrabber::Reach() const
+{
+	FVector playerViewPointLocation;
+	FRotator playerViewPointRotation;
+	///Getting from the game location and rotation and saving it in objects declared above
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT playerViewPointLocation, OUT playerViewPointRotation);
+	FVector lineTraceEnd = playerViewPointLocation + playerViewPointRotation.Vector() * reach;
+	DrawDebugLine(GetWorld(), playerViewPointLocation, lineTraceEnd, FColor(255, 0, 0), false, 0.f, 0.f, 10.f);
+	FCollisionQueryParams traceParam(FName(""), false, GetOwner());
+	FHitResult hit;
+	GetWorld()->LineTraceSingleByObjectType(OUT hit, playerViewPointLocation, lineTraceEnd, FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), traceParam);
+	AActor* actorHit = hit.GetActor();
+	if (actorHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("The ray hits: %s"), *actorHit->GetName());
+	}
+}
+
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grabbed"));
+}
+void UGrabber::Release()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Released"));
 }
 
 
@@ -35,13 +74,6 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	FVector playerViewPointLocation;
-	FRotator playerViewPointRotation;
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT playerViewPointLocation, OUT playerViewPointRotation);
-
-	/*UE_LOG(LogTemp, Warning, TEXT("View Point Location: %s,  View Point Rotation: %s"), *playerViewPointLocation.ToString(), *playerViewPointRotation.ToString());*/
-	FVector lineTraceEnd = playerViewPointLocation + playerViewPointRotation.Vector() * reach;
-	DrawDebugLine(GetWorld(), playerViewPointLocation, lineTraceEnd, FColor(255, 0, 0), false, 0.0f, 0, 10.0f);
-	// ...
+	Reach();
 }
 
