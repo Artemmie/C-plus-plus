@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/PrimitiveComponent.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Gameframework/Actor.h"
+#include "Engine/World.h"
 #include "Grabber.generated.h"
 
 
@@ -15,15 +18,12 @@ class ESCAPE_ROOM_API UGrabber : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UGrabber();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
@@ -32,7 +32,8 @@ private:
 	UInputComponent* inputComponent = nullptr;
 	void PhysicsHandleComponent();
 	void InputComponent();
-	FHitResult reachTarget() const;
+	FHitResult ReachTarget() const;
+	FTwoVectors GetLineTracePoints() const;
 	void Grab();
 	void Release();
 };

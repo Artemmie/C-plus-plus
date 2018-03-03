@@ -40,6 +40,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	float doorCloseDelay = 0.5f;
 
+	UPROPERTY(EditAnywhere)
+		AActor* statue;
+
 	float lastDoorOpenTime;
 	AActor* actorOpens;
 	AActor* owner = GetOwner();
