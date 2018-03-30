@@ -18,10 +18,13 @@ void UGrabber::BeginPlay()
 void UGrabber::PhysicsHandleComponent()
 {
 	physicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (physicsHandle == nullptr) UE_LOG(LogTemp, Error, TEXT("%s missing physics handle component"), *GetOwner()->GetName());
 }
 void UGrabber::InputComponent()
 {
+	if (physicsHandle == nullptr) UE_LOG(LogTemp, Error, TEXT("%s missing input component"), *GetOwner()->GetName());
 	inputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (!inputComponent) return;
 	if (inputComponent)
 	{
 		inputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
@@ -36,6 +39,7 @@ void UGrabber::Grab()
 	auto actorHit = hitResult.GetActor();
 	if (actorHit)
 	{
+		if (!physicsHandle) return;
 		physicsHandle->GrabComponentAtLocationWithRotation(
 			componentToGrab,
 			NAME_None,
@@ -46,11 +50,13 @@ void UGrabber::Grab()
 }
 void UGrabber::Release()
 {
+	if (!physicsHandle) return;
 	physicsHandle->ReleaseComponent();
 }
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
+	if (!physicsHandle) return;
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (physicsHandle->GrabbedComponent) physicsHandle->SetTargetLocation(GetLineTracePoints().v2);
 }
