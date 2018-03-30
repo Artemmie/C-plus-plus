@@ -20,29 +20,12 @@ void UOpenDoor::BeginPlay()
 
 }
 
-void UOpenDoor::openDoor()
-{
-	FRotator newRot = FRotator(0.0f, openAngle, 0.0f);
-	owner->SetActorRotation(newRot, ETeleportType::TeleportPhysics);
-}
-
-void UOpenDoor::closeDoor()
-{
-	FRotator newRot = FRotator(0.0f, 90.0f, 0.0f);
-	owner->SetActorRotation(newRot, ETeleportType::TeleportPhysics);
-}
-
 
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (!pressurePlate || !statue) return;
-	if (pressurePlate->IsOverlappingActor(actorOpens) || pressurePlate->IsOverlappingActor(statue)) {
-		openDoor();
-		lastDoorOpenTime = GetWorld()->GetTimeSeconds();
-	}
-	else if ((!pressurePlate->IsOverlappingActor(actorOpens) || !pressurePlate->IsOverlappingActor(statue)) && GetWorld()->GetTimeSeconds() - lastDoorOpenTime > doorCloseDelay) {
-		closeDoor();
-	}
+	if (pressurePlate->IsOverlappingActor(actorOpens) || pressurePlate->IsOverlappingActor(statue)) onOpen.Broadcast();
+	else if ((!pressurePlate->IsOverlappingActor(actorOpens) || !pressurePlate->IsOverlappingActor(statue)))  onClose.Broadcast();
 }
 
