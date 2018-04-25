@@ -59,6 +59,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	if (!physicsHandle) return;
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (physicsHandle->GrabbedComponent) physicsHandle->SetTargetLocation(GetLineTracePoints().v2);
+
 }
 
 FHitResult UGrabber::ReachTarget() const
@@ -73,6 +74,7 @@ FHitResult UGrabber::ReachTarget() const
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
 		traceParam
 	);
+
 	return hitResult;
 }
 
